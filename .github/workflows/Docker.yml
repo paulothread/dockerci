@@ -9,6 +9,11 @@ jobs:
   steps:
     - name: obtem acesso ao repositório
       uses: actions/checkout@v3
+    
+    - name: Download main compilado
+      uses: actions/download-artifact@v3
+      with:
+        name: programa
 
     - name: setup Docker Build
       uses: docker/setup-buildx-action@v2.0.0
@@ -19,3 +24,14 @@ jobs:
         username: ${{ secrets.dockerhub_user }}
         password: ${{ secrets.dockerhub_pass }}
     
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v3.1.1
+      with:
+# Build's context is the set of files located in the specified PATH or URL
+      context: .
+# Path to the Dockerfile
+      file: ./Dockerfile
+# Push is a shorthand for --output=type=registry
+      push: true
+# List of tags
+      tags: paulothread/go_ci:${{github.ref_name}}
