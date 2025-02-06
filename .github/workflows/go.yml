@@ -9,13 +9,13 @@ on:
 jobs:
 
   test:
-    runs-on: ${{ matrix.so }}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         go_version: ['1.18', '1.17', '>=1.18']
-        so: ['ubuntu-latest', 'ubunto-18.04']
+        so: ['ubuntu-latest', 'ubuntu-18.04']
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
 
     - name: Set up Go
       uses: actions/setup-go@v3
@@ -23,7 +23,7 @@ jobs:
         go-version: ${{ matrix.go_version }}
       
     - name: Build-DB
-      run: docker compose build
+      run: docker-compose build
       
     - name: Create-DB
       run: docker compose up -d
@@ -34,10 +34,10 @@ jobs:
   
   build:
     needs: test
-    runs-on: ${{ matrix.so }}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        so: ['ubuntu-latest', 'ubuntu-18.04']
+        os: ['ubuntu-latest', 'ubuntu-18.04']
     steps:
     - uses: actions/checkout@v3
     - name: Build
